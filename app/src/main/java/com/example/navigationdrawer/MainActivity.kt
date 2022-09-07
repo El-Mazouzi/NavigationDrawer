@@ -3,26 +3,31 @@ package com.example.navigationdrawer
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.example.navigationdrawer.ui.theme.NavigationDrawerTheme
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+
+    @OptIn(ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             NavigationDrawerTheme {
-                val scaffoldState = rememberScaffoldState()
+                val scaffoldState = rememberBottomSheetScaffoldState()
                 val scope = rememberCoroutineScope()
                 val navController = rememberNavController()
-                Scaffold(
+                BottomSheetScaffold(
                     topBar = {
                         AppBar(
                             onAppBarClicked = {
@@ -51,13 +56,23 @@ class MainActivity : ComponentActivity() {
                             },
                         )
                     },
-                    bottomBar = {
-                        BottomNavBar(
-                            navController = navController
-                        )
-                    },
+                    sheetElevation = 18.dp,
+                    sheetPeekHeight = 0.dp,
+                    sheetContent = { BottomSheet(scaffoldState = scaffoldState) }
                 ) {
-                    NavigationGraph(navController = navController)
+                    Scaffold(
+                        bottomBar = {
+                            BottomNavBar(
+                                navController = navController
+                            )
+                        },
+                    ) {
+
+                        NavigationGraph(
+                            navController = navController,
+                            scaffoldState = scaffoldState
+                        )
+                    }
                 }
             }
         }

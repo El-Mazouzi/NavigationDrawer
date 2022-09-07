@@ -77,11 +77,12 @@ fun BottomNavBar(
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun NavigationGraph(navController: NavHostController) {
-    NavHost(navController, startDestination = Routes.Home.route) {
+fun NavigationGraph(navController: NavHostController, scaffoldState: BottomSheetScaffoldState) {
+    NavHost(navController, startDestination = Routes.Profile.route) {
         composable(Routes.Home.route) {
-            HomeScreen()
+            HomeScreen(scaffoldState = scaffoldState)
         }
         composable(Routes.Cart.route) {
             CartScreen()
